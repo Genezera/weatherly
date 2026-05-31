@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="pt-BR">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -7,7 +7,7 @@
     <title>Weatherly</title>
     <meta
       name="description"
-      content="Dashboard de clima com busca de cidades (Open‑Meteo) e cache local."
+      content="Weather dashboard with city search (Open‑Meteo) and local cache."
     />
     <link rel="stylesheet" href="./styles.css" />
     <script type="module" src="./app.js"></script>
@@ -25,19 +25,19 @@
       <div class="container search">
         <form class="search__form" data-search-form>
           <label class="field">
-            <span class="field__label">Cidade</span>
+            <span class="field__label">City</span>
             <input
               class="field__input"
               name="q"
-              placeholder="Ex.: São Paulo, Curitiba, Recife..."
+              placeholder='e.g. "New York", "London", "Tokyo"...'
               autocomplete="off"
               required
               data-q
             />
           </label>
-          <button class="btn btn--primary" type="submit">Buscar</button>
+          <button class="btn btn--primary" type="submit">Search</button>
           <button class="btn btn--ghost" type="button" data-use-location>
-            Minha localização
+            Use my location
           </button>
         </form>
         <div class="suggestions" hidden data-suggestions></div>
@@ -46,9 +46,9 @@
 
     <main class="container">
       <section class="grid" aria-label="Clima">
-        <article class="card" aria-label="Atual">
+        <article class="card" aria-label="Current">
           <header class="card__header">
-            <h2 class="card__title">Agora</h2>
+            <h2 class="card__title">Now</h2>
             <span class="pill" data-now-place>—</span>
           </header>
           <div class="now" data-now>
@@ -61,9 +61,9 @@
           <div class="hint muted small" data-now-hint></div>
         </article>
 
-        <article class="card" aria-label="Previsão">
+        <article class="card" aria-label="Forecast">
           <header class="card__header">
-            <h2 class="card__title">7 dias</h2>
+            <h2 class="card__title">7 days</h2>
             <span class="pill" data-updated>—</span>
           </header>
           <div class="forecast" data-forecast></div>
@@ -72,9 +72,9 @@
 
       <section class="section">
         <header class="section__header">
-          <h2 class="section__title">Recentes</h2>
+          <h2 class="section__title">Recents</h2>
           <button class="btn btn--ghost" type="button" data-clear-recent>
-            Limpar
+            Clear
           </button>
         </header>
         <div class="recent" data-recent></div>

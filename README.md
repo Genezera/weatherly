@@ -1,33 +1,33 @@
 # Weatherly
 
-Dashboard de clima com busca de cidades e previsão de 7 dias usando a API do **Open‑Meteo** (sem chave). Inclui cache local para reduzir requisições e “recentes” para navegação rápida.
+Weather dashboard with city search and a 7-day forecast using the **Open‑Meteo** API (no key). Includes a local cache to reduce requests and a recents list for quick navigation.
 
 ## Features
 
-- Busca de cidades com sugestões (geocoding do Open‑Meteo)
-- Clima atual + previsão de 7 dias
-- Cache em LocalStorage (TTL) para melhorar a performance
-- Lista de buscas recentes
-- Opção “Minha localização” (Geolocation API)
+- City search with suggestions (Open‑Meteo geocoding)
+- Current weather + 7-day forecast
+- LocalStorage cache (TTL) to improve performance
+- Recent searches list
+- “Use my location” option (Geolocation API)
 
-## Tecnologias
+## Tech
 
 - HTML + CSS
-- JavaScript (sem bibliotecas)
+- JavaScript (no libraries)
 - Fetch API + LocalStorage
 - Open‑Meteo (Geocoding + Forecast)
 
-## Como rodar
+## Run
 
-Recomendado rodar com servidor local (por causa de restrições de `fetch` em alguns navegadores quando abre via `file://`):
+Recommended to run with a local server (some browsers restrict `fetch` when opened via `file://`):
 
 ```bash
 python -m http.server 5173
 ```
 
-Abra: `http://localhost:5173/`
+Open: `http://localhost:5173/`
 
-## APIs usadas
+## APIs used
 
 - Geocoding: `https://geocoding-api.open-meteo.com/v1/search`
 - Forecast: `https://api.open-meteo.com/v1/forecast`

@@ -31,34 +31,34 @@ function formatMm(v) {
 
 function weekdayPt(dateStr) {
   const d = new Date(`${dateStr}T00:00:00`);
-  return new Intl.DateTimeFormat("pt-BR", { weekday: "short", day: "2-digit", month: "2-digit" }).format(
+  return new Intl.DateTimeFormat("en-US", { weekday: "short", day: "2-digit", month: "2-digit" }).format(
     d,
   );
 }
 
 function nowLabel(date = new Date()) {
-  return new Intl.DateTimeFormat("pt-BR", { dateStyle: "medium", timeStyle: "short" }).format(
+  return new Intl.DateTimeFormat("en-US", { dateStyle: "medium", timeStyle: "short" }).format(
     date,
   );
 }
 
 function weatherCodeLabel(code) {
   const c = Number(code);
-  if (c === 0) return "Céu limpo";
-  if (c === 1 || c === 2) return "Poucas nuvens";
-  if (c === 3) return "Nublado";
-  if (c === 45 || c === 48) return "Neblina";
-  if (c === 51 || c === 53 || c === 55) return "Garoa";
-  if (c === 56 || c === 57) return "Garoa congelante";
-  if (c === 61 || c === 63 || c === 65) return "Chuva";
-  if (c === 66 || c === 67) return "Chuva congelante";
-  if (c === 71 || c === 73 || c === 75) return "Neve";
-  if (c === 77) return "Neve granulada";
-  if (c === 80 || c === 81 || c === 82) return "Pancadas de chuva";
-  if (c === 85 || c === 86) return "Pancadas de neve";
-  if (c === 95) return "Trovoadas";
-  if (c === 96 || c === 99) return "Trovoadas com granizo";
-  return "Condição desconhecida";
+  if (c === 0) return "Clear sky";
+  if (c === 1 || c === 2) return "Partly cloudy";
+  if (c === 3) return "Overcast";
+  if (c === 45 || c === 48) return "Fog";
+  if (c === 51 || c === 53 || c === 55) return "Drizzle";
+  if (c === 56 || c === 57) return "Freezing drizzle";
+  if (c === 61 || c === 63 || c === 65) return "Rain";
+  if (c === 66 || c === 67) return "Freezing rain";
+  if (c === 71 || c === 73 || c === 75) return "Snow";
+  if (c === 77) return "Snow grains";
+  if (c === 80 || c === 81 || c === 82) return "Rain showers";
+  if (c === 85 || c === 86) return "Snow showers";
+  if (c === 95) return "Thunderstorm";
+  if (c === 96 || c === 99) return "Thunderstorm with hail";
+  return "Unknown";
 }
 
 function loadStore() {
@@ -171,7 +171,7 @@ function renderRecent() {
   if (!store.recent.length) {
     const empty = document.createElement("div");
     empty.className = "muted small";
-    empty.textContent = "Nenhuma busca recente ainda.";
+    empty.textContent = "No recent searches yet.";
     recentEl.appendChild(empty);
     return;
   }
@@ -187,23 +187,23 @@ function renderRecent() {
 }
 
 function renderLoading(placeLabel) {
-  nowPlaceEl.textContent = placeLabel || "Carregando…";
+  nowPlaceEl.textContent = placeLabel || "Loading…";
   nowTempEl.textContent = "—";
-  nowDescEl.textContent = "Buscando dados…";
+  nowDescEl.textContent = "Fetching data…";
   nowStatsEl.replaceChildren();
   nowHintEl.textContent = "";
   updatedEl.textContent = "—";
   forecastEl.replaceChildren();
   const sk = document.createElement("div");
   sk.className = "muted small";
-  sk.textContent = "Carregando previsão…";
+  sk.textContent = "Loading forecast…";
   forecastEl.appendChild(sk);
 }
 
 function renderError(message) {
-  nowDescEl.textContent = "Não foi possível carregar.";
+  nowDescEl.textContent = "Couldn't load.";
   nowHintEl.textContent = message;
-  showToast("Falha ao buscar clima.");
+  showToast("Failed to fetch weather.");
 }
 
 function renderWeather(place, data) {
@@ -218,10 +218,10 @@ function renderWeather(place, data) {
 
   nowStatsEl.replaceChildren();
   const stats = [
-    { label: "Sensação", value: formatTemp(current.apparent_temperature) },
-    { label: "Umidade", value: formatPct(current.relative_humidity_2m) },
-    { label: "Vento", value: formatWind(current.wind_speed_10m) },
-    { label: "Chuva", value: formatMm(current.precipitation) },
+    { label: "Feels like", value: formatTemp(current.apparent_temperature) },
+    { label: "Humidity", value: formatPct(current.relative_humidity_2m) },
+    { label: "Wind", value: formatWind(current.wind_speed_10m) },
+    { label: "Precip", value: formatMm(current.precipitation) },
   ];
   for (const s of stats) {
     const el = document.createElement("div");
@@ -237,7 +237,7 @@ function renderWeather(place, data) {
     nowStatsEl.appendChild(el);
   }
 
-  updatedEl.textContent = `Atualizado: ${nowLabel(new Date())}`;
+  updatedEl.textContent = `Updated: ${nowLabel(new Date())}`;
 
   forecastEl.replaceChildren();
   for (let i = 0; i < (daily.time?.length || 0); i++) {
@@ -271,7 +271,7 @@ function renderWeather(place, data) {
     const pop = document.createElement("div");
     pop.className = "muted small";
     const pp = daily.precipitation_probability_max?.[i];
-    pop.textContent = `Chuva: ${formatPct(pp)}`;
+    pop.textContent = `Precip: ${formatPct(pp)}`;
 
     right.appendChild(temp);
     right.appendChild(pop);
@@ -283,7 +283,7 @@ function renderWeather(place, data) {
   }
 
   nowHintEl.textContent =
-    "Dica: se a busca falhar ao abrir via arquivo, rode com um servidor local (python -m http.server).";
+    "Tip: if fetch fails when opening as a file, run a local server (python -m http.server).";
 }
 
 async function fetchJson(url) {
@@ -294,7 +294,7 @@ async function fetchJson(url) {
 
 async function geocode(query) {
   const q = encodeURIComponent(query.trim());
-  const url = `https://geocoding-api.open-meteo.com/v1/search?name=${q}&count=6&language=pt&format=json`;
+  const url = `https://geocoding-api.open-meteo.com/v1/search?name=${q}&count=6&language=en&format=json`;
   const key = `geo:${q}`;
   const cached = cacheGet(store, key);
   if (cached) return cached;
@@ -325,9 +325,9 @@ async function fetchAndRender(place) {
     const data = await forecast(place.lat, place.lon);
     addRecent(place);
     renderWeather(place, data);
-    showToast("Clima atualizado.");
+    showToast("Weather updated.");
   } catch (err) {
-    renderError(`Detalhes: ${String(err?.message || err)}`);
+    renderError(`Details: ${String(err?.message || err)}`);
   }
 }
 
@@ -369,7 +369,7 @@ form.addEventListener("submit", async (ev) => {
     const data = await geocode(q);
     const first = Array.isArray(data?.results) ? data.results[0] : null;
     if (!first) {
-      renderError("Nenhuma cidade encontrada.");
+      renderError("No city found.");
       return;
     }
     const place = {
@@ -381,30 +381,30 @@ form.addEventListener("submit", async (ev) => {
     qEl.value = place.label;
     await fetchAndRender(place);
   } catch (err) {
-    renderError(`Detalhes: ${String(err?.message || err)}`);
+    renderError(`Details: ${String(err?.message || err)}`);
   }
 });
 
 useLocationBtn.addEventListener("click", () => {
   if (!navigator.geolocation) {
-    showToast("Geolocalização não disponível.");
+    showToast("Geolocation is not available.");
     return;
   }
-  renderLoading("Minha localização");
+  renderLoading("My location");
   navigator.geolocation.getCurrentPosition(
     async (pos) => {
       const lat = pos.coords.latitude;
       const lon = pos.coords.longitude;
       const place = {
         id: `geo:${lat.toFixed(3)}:${lon.toFixed(3)}`,
-        label: "Minha localização",
+        label: "My location",
         lat,
         lon,
       };
       await fetchAndRender(place);
     },
     (err) => {
-      renderError(`Permissão negada ou erro de localização: ${err.message}`);
+      renderError(`Location permission denied or error: ${err.message}`);
     },
     { enableHighAccuracy: false, timeout: 8000 },
   );
@@ -414,7 +414,7 @@ clearRecentBtn.addEventListener("click", () => {
   store.recent = [];
   saveStore(store);
   renderRecent();
-  showToast("Recentes limpos.");
+  showToast("Recents cleared.");
 });
 
 document.addEventListener("click", (ev) => {
@@ -430,6 +430,5 @@ renderRecent();
 if (store.recent[0]) fetchAndRender(store.recent[0]);
 else {
   nowHintEl.textContent =
-    "Busque uma cidade para ver o clima. Se a busca falhar ao abrir via arquivo, rode com um servidor local (python -m http.server).";
+    "Search for a city to see the weather. If fetch fails when opening as a file, run a local server (python -m http.server).";
 }
-
