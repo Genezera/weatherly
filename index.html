@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="dark light" />
+    <title>Weatherly</title>
+    <meta
+      name="description"
+      content="Dashboard de clima com busca de cidades (Open‑Meteo) e cache local."
+    />
+    <link rel="stylesheet" href="./styles.css" />
+    <script type="module" src="./app.js"></script>
+  </head>
+  <body>
+    <header class="top">
+      <div class="container top__inner">
+        <div>
+          <a class="back" href="./README.md">README</a>
+          <h1 class="title">Weatherly</h1>
+          <p class="subtitle">Open‑Meteo • Busca • Forecast • Cache</p>
+        </div>
+      </div>
+
+      <div class="container search">
+        <form class="search__form" data-search-form>
+          <label class="field">
+            <span class="field__label">Cidade</span>
+            <input
+              class="field__input"
+              name="q"
+              placeholder="Ex.: São Paulo, Curitiba, Recife..."
+              autocomplete="off"
+              required
+              data-q
+            />
+          </label>
+          <button class="btn btn--primary" type="submit">Buscar</button>
+          <button class="btn btn--ghost" type="button" data-use-location>
+            Minha localização
+          </button>
+        </form>
+        <div class="suggestions" hidden data-suggestions></div>
+      </div>
+    </header>
+
+    <main class="container">
+      <section class="grid" aria-label="Clima">
+        <article class="card" aria-label="Atual">
+          <header class="card__header">
+            <h2 class="card__title">Agora</h2>
+            <span class="pill" data-now-place>—</span>
+          </header>
+          <div class="now" data-now>
+            <div class="now__temp" data-now-temp>—</div>
+            <div class="now__meta">
+              <div class="muted" data-now-desc>—</div>
+              <div class="now__stats" data-now-stats></div>
+            </div>
+          </div>
+          <div class="hint muted small" data-now-hint></div>
+        </article>
+
+        <article class="card" aria-label="Previsão">
+          <header class="card__header">
+            <h2 class="card__title">7 dias</h2>
+            <span class="pill" data-updated>—</span>
+          </header>
+          <div class="forecast" data-forecast></div>
+        </article>
+      </section>
+
+      <section class="section">
+        <header class="section__header">
+          <h2 class="section__title">Recentes</h2>
+          <button class="btn btn--ghost" type="button" data-clear-recent>
+            Limpar
+          </button>
+        </header>
+        <div class="recent" data-recent></div>
+      </section>
+    </main>
+
+    <div class="toast" role="status" aria-live="polite" aria-atomic="true" hidden data-toast></div>
+  </body>
+</html>
