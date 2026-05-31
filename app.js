@@ -114,6 +114,8 @@ let toastTimer = null;
 
 let store = loadStore();
 let currentPlace = null;
+let suggestionItems = [];
+let activeSuggestionIndex = -1;
 
 function showToast(message) {
   toastEl.textContent = message;
@@ -126,19 +128,37 @@ function showToast(message) {
 
 function setSuggestionsOpen(open) {
   suggestionsEl.hidden = !open;
+  qEl.setAttribute("aria-expanded", open ? "true" : "false");
+  if (!open) qEl.removeAttribute("aria-activedescendant");
+}
+
+function setActiveSuggestion(index) {
+  activeSuggestionIndex = index;
+  const options = Array.from(suggestionsEl.querySelectorAll('[role="option"]'));
+  options.forEach((el, i) => el.setAttribute("aria-selected", i === index ? "true" : "false"));
+  const active = options[index];
+  if (active?.id) qEl.setAttribute("aria-activedescendant", active.id);
+  if (active && typeof active.scrollIntoView === "function") {
+    active.scrollIntoView({ block: "nearest" });
+  }
 }
 
 function renderSuggestions(items) {
+  suggestionItems = items;
+  activeSuggestionIndex = -1;
   suggestionsEl.replaceChildren();
   if (!items.length) {
     setSuggestionsOpen(false);
     return;
   }
 
-  for (const it of items) {
+  for (const [idx, it] of items.entries()) {
     const btn = document.createElement("button");
     btn.type = "button";
     btn.className = "suggestion";
+    btn.id = `suggestion-${idx}`;
+    btn.setAttribute("role", "option");
+    btn.setAttribute("aria-selected", "false");
     const left = document.createElement("div");
     left.textContent = it.label;
     const right = document.createElement("div");
@@ -146,6 +166,7 @@ function renderSuggestions(items) {
     right.textContent = `${it.lat.toFixed(2)}, ${it.lon.toFixed(2)}`;
     btn.appendChild(left);
     btn.appendChild(right);
+    btn.addEventListener("mouseenter", () => setActiveSuggestion(idx));
     btn.addEventListener("click", () => {
       qEl.value = it.label;
       setSuggestionsOpen(false);
@@ -336,6 +357,8 @@ qEl.addEventListener("input", () => {
   const q = qEl.value.trim();
   clearTimeout(suggestTimer);
   if (q.length < 3) {
+    suggestionItems = [];
+    activeSuggestionIndex = -1;
     setSuggestionsOpen(false);
     return;
   }
@@ -354,9 +377,42 @@ qEl.addEventListener("input", () => {
       });
       renderSuggestions(mapped);
     } catch {
+      suggestionItems = [];
+      activeSuggestionIndex = -1;
       setSuggestionsOpen(false);
     }
   }, 260);
+});
+
+qEl.addEventListener("keydown", (ev) => {
+  if (ev.key === "Escape") {
+    setSuggestionsOpen(false);
+    return;
+  }
+
+  if (ev.key === "ArrowDown" || ev.key === "ArrowUp") {
+    if (suggestionsEl.hidden) {
+      if (suggestionItems.length) setSuggestionsOpen(true);
+      else return;
+    }
+    ev.preventDefault();
+    const delta = ev.key === "ArrowDown" ? 1 : -1;
+    const next = Math.max(
+      0,
+      Math.min(suggestionItems.length - 1, activeSuggestionIndex + delta),
+    );
+    setActiveSuggestion(next);
+    return;
+  }
+
+  if (ev.key === "Enter" && !suggestionsEl.hidden && activeSuggestionIndex >= 0) {
+    ev.preventDefault();
+    const it = suggestionItems[activeSuggestionIndex];
+    if (!it) return;
+    qEl.value = it.label;
+    setSuggestionsOpen(false);
+    fetchAndRender(it);
+  }
 });
 
 form.addEventListener("submit", async (ev) => {

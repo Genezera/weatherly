@@ -168,7 +168,8 @@ a {
   border: 1px solid var(--border);
   border-radius: 14px;
   background: color-mix(in srgb, var(--panel) 86%, transparent);
-  overflow: hidden;
+  overflow: auto;
+  max-height: 260px;
 }
 
 .suggestion {
@@ -187,6 +188,12 @@ a {
 
 .suggestion:hover {
   background: color-mix(in srgb, var(--panel) 70%, transparent);
+}
+
+.suggestion[aria-selected="true"] {
+  background: color-mix(in srgb, var(--panel) 70%, transparent);
+  outline: 2px solid color-mix(in srgb, var(--accent) 55%, transparent);
+  outline-offset: -2px;
 }
 
 .grid {
